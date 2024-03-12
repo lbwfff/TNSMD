@@ -6,10 +6,11 @@
 #' @param peptide_quant
 #' @param datatype
 #'
-#' @return
+#' @return Filtered Peptide list for protein intensity estimation
 #' @export
 #'
 #' @examples
+#'
 #'
 #'
 filter_psm <- function(combined_peptide,fastafile,peptide_quant,datatype) {
