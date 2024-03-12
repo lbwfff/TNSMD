@@ -1,0 +1,27 @@
+{
+    "id": "43CC81BE",
+    "path": "~/project/TNSMD/R/filter_psm.R",
+    "project_path": "R/filter_psm.R",
+    "type": "r_source",
+    "hash": "3282338764",
+    "contents": "",
+    "dirty": false,
+    "created": 1709898917380.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "91,0",
+        "scrollLine": "75"
+    },
+    "folds": "18|23|52|2|\n",
+    "lastKnownWriteTime": 1710162723,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1710162723167,
+    "read_only": false,
+    "read_only_alternatives": []
+}
