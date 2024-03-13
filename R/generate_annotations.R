@@ -24,9 +24,6 @@ generate_annotations <- function(annotate_files, assemble_transcriptome){
 
   new<-new[!(new$transcript_id %in% new$transcript_id[new$class_code=='=']),]
 
-  #随机抽一万个作为demo
-  new<-new[new$transcript_id%in% c(unique(new$transcript_id)[sample(length(unique(new$transcript_id)), size = 10000)]),]
-
   cache<-as.data.frame(array(NA,c(1,9)))
 
   print('Start adjusting the annotation file, if there are a large number of assembled transcripts this may take more time')
