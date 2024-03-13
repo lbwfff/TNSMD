@@ -7,9 +7,9 @@
 generate_index(file, source, length, label, OrganismName, OrganismIdentifier)
 }
 \arguments{
-\item{file}{Ribo-seq analysis output file}
+\item{file}{Ribo-seq analysis output file, When source is set to other, you need to provide three columns including 'genename', 'orftype' and 'pepseq'. csv file}
 
-\item{source}{ribocode, ribotish or other}
+\item{source}{ribocode, ribotish or other, Can be set to other to index result files or public database files that are not ribocode or ribotish outputs}
 
 \item{length}{Peptide length, used to filter long proteins in the index, set to 0 when there is no need to filter by length}
 
@@ -26,7 +26,7 @@ A Biostrings object can be written as a fasta file
 Construction of a proteogenomics index based on ribo-seq results
 }
 \examples{
-generate_index(file='ribocode.txt',source='ribocode',length='100',label='sPep')
+generate_index(file='ribocode.txt',source='ribocode',length=100,label='sPep')
 
 
 }

@@ -3,7 +3,7 @@
     "path": "~/project/TNSMD/R/hello.R",
     "project_path": "R/hello.R",
     "type": "r_source",
-    "hash": "48255452",
+    "hash": "3348247118",
     "contents": "",
     "dirty": false,
     "created": 1709898753388.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "20,0",
+        "cursorPosition": "13,30",
         "scrollLine": "0"
     },
     "folds": "15|21|17|0|\n",
-    "lastKnownWriteTime": 1710247400,
+    "lastKnownWriteTime": 1710308776,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1710247400488,
+    "last_content_update": 1710308776439,
     "read_only": false,
     "read_only_alternatives": []
 }

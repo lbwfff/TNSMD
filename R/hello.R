@@ -17,4 +17,4 @@ hello <- function() {
   print("Hello, world!")
 }
 
-# roxygenize()
+# roxygen2::roxygenize()
