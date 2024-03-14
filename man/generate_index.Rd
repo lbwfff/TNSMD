@@ -26,7 +26,14 @@ A Biostrings object can be written as a fasta file
 Construction of a proteogenomics index based on ribo-seq results
 }
 \examples{
-generate_index(file='ribocode.txt',source='ribocode',length=100,label='sPep')
+#don't run
+library('TNSMD')
+
+test<-generate_index('ribo/homo_brain_ribocode.txt','ribocode',100,'sPep')
+
+characters<-test$sequence
+list<-as.list(characters)
+seqinr::write.fasta(sequences=list, names=test$name, file.out='sPep.fasta', open='w', nbchar=60)
 
 
 }

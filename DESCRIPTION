@@ -12,9 +12,14 @@ LazyData: true
 RoxygenNote: 7.3.1
 Imports: 
     Biostrings,
+    clusterProfiler,
     data.table,
     ggplot2,
     ggrepel,
+    GseaVis,
+    MSstatsTMT,
+    org.Hs.eg.db,
+    org.Mm.eg.db,
     progress,
     rtracklayer,
     utils

@@ -13,8 +13,9 @@
 #   Check Package:             'Cmd + Shift + E'
 #   Test Package:              'Cmd + Shift + T'
 
-hello <- function() {
-  print("Hello, world!")
-}
-
 # roxygen2::roxygenize()
+# usethis::use_package("")
+# rm(list= ls())
+
+
+
