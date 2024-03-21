@@ -7,7 +7,9 @@
 #' @export
 #'
 #' @examples
-#' generate_annotations(annotate_files='gencode.v44.annotation.gff3',assemble_transcriptome='1fpkm.annotated.gtf')
+#'
+#' generate_annotations(annotate_files='gencode.v44.annotation.gff3',
+#' assemble_transcriptome='1fpkm.annotated.gtf')
 #'
 #'
 generate_annotations <- function(annotate_files, assemble_transcriptome){

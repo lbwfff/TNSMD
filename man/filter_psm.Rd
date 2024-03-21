@@ -16,15 +16,15 @@ filter_psm(
 \arguments{
 \item{combined_peptide}{Combined_peptide file from fragpipe}
 
-\item{combined_modified_peptide}{combined_modified_peptide file from fragpipe}
+\item{combined_modified_peptide}{combined_modified_peptide file from fragpipe, lbf data no need}
 
 \item{fastafile}{Fasta files for known proteins}
 
-\item{peptide_quant}{fragpipe outputs a quantitative file of peptide}
+\item{peptide_quant}{fragpipe outputs a quantitative file of peptide, for label-free data please use the msstats.csv file}
 
 \item{datatype}{tmt or lbf}
 
-\item{label}{Tags are used to filter known proteins, for uniprot proteins use 'sp'}
+\item{label}{Tags are used to filter known proteins, for Swiss-Prot proteins can use 'sp', It is also possible to use species names e.g. 'HUMAN', 'MOUSE', as long as it is possible to distinguish between classical and non-classical proteins.}
 }
 \value{
 Quantification of peptide intensity after filtration

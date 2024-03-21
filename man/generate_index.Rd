@@ -13,7 +13,7 @@ generate_index(file, source, length, label, OrganismName, OrganismIdentifier)
 
 \item{length}{Peptide length, used to filter long proteins in the index, set to 0 when there is no need to filter by length}
 
-\item{label}{fasta head tag, e.g. "sPep", not 'sp' or 'tr' is recommended.}
+\item{label}{index tag, e.g. 'sPep', note that subsequent analyses will be fetched based on this label, so please do not enter labels that may cause confusion}
 
 \item{OrganismName}{OrganismName is the scientific name of the organism for the UniProtKB entry, defaulting to "Homo sapiens".}
 
@@ -26,7 +26,9 @@ A Biostrings object can be written as a fasta file
 Construction of a proteogenomics index based on ribo-seq results
 }
 \examples{
+
 #don't run
+
 library('TNSMD')
 
 test<-generate_index('ribo/homo_brain_ribocode.txt','ribocode',100,'sPep')

@@ -3,7 +3,7 @@
 #' @param file Ribo-seq analysis output file, When source is set to other, you need to provide three columns including 'genename', 'orftype' and 'pepseq'. csv file
 #' @param source ribocode, ribotish or other, Can be set to other to index result files or public database files that are not ribocode or ribotish outputs
 #' @param length Peptide length, used to filter long proteins in the index, set to 0 when there is no need to filter by length
-#' @param label fasta head tag, e.g. "sPep", not 'sp' or 'tr' is recommended.
+#' @param label index tag, e.g. 'sPep', note that subsequent analyses will be fetched based on this label, so please do not enter labels that may cause confusion
 #' @param OrganismName OrganismName is the scientific name of the organism for the UniProtKB entry, defaulting to "Homo sapiens".
 #' @param OrganismIdentifier OrganismIdentifier is the unique identifier of the source organism, assigned by NCBI, defaulting to "9696".
 #'
@@ -11,7 +11,9 @@
 #' @export
 #'
 #' @examples
+#'
 #' #don't run
+#'
 #' library('TNSMD')
 #'
 #' test<-generate_index('ribo/homo_brain_ribocode.txt','ribocode',100,'sPep')
@@ -60,7 +62,7 @@ generate_index<- function(file,source,length,label,
         ribo$ORF_type=='Overlap_dORF','Overlap_dORF',ifelse(
           ribo$ORF_type=='Overlap_uORF','Overlap_uORF', 'uORF')))))
 
-  ribo$name1<-paste0(label,'|',label,'_',1:nrow(ribo),'|',label,'_',1:nrow(ribo))
+  ribo$name1<-paste0('tr','|',label,'_',1:nrow(ribo),'|',label,'_',1:nrow(ribo))
 
   ribo$name2<-paste0(ribo$gene_name,' ',orftype)
 
@@ -92,7 +94,8 @@ generate_index<- function(file,source,length,label,
           ribo$TisType %in% c("5'UTR:CDSFrameOverlap"),'Overlap_uORF',ifelse(
             ribo$TisType %in% c("Novel"),'novel ORF', 'other ORF')))))
 
-    ribo$name1<-paste0(label,'|',label,'_',1:nrow(ribo),'|',label,'_',1:nrow(ribo))
+    # ribo$name1<-paste0(label,'|',label,'_',1:nrow(ribo),'|',label,'_',1:nrow(ribo))
+    ribo$name1<-paste0('tr','|',label,'_',1:nrow(ribo),'|',label,'_',1:nrow(ribo))
 
     ribo$name2<-paste0(ribo$Symbol,' ',orftype)
 
@@ -118,7 +121,7 @@ generate_index<- function(file,source,length,label,
     ribo<-ribo[ribo$length <= length,]
   }
 
-  ribo$name1<-paste0(label,'|',label,'_',1:nrow(ribo),'|',label,'_',1:nrow(ribo))
+  ribo$name1<-paste0('tr','|',label,'_',1:nrow(ribo),'|',label,'_',1:nrow(ribo))
 
   ribo$name2<-paste0(ribo$genename,' ',ribo$orftype)
 

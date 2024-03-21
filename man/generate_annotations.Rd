@@ -18,7 +18,9 @@ Adjusted assembled transcriptome that can be merged with annotation files for Ri
 Generate annotation files for Ribo-seq analysis
 }
 \examples{
-generate_annotations(annotate_files='gencode.v44.annotation.gff3',assemble_transcriptome='1fpkm.annotated.gtf')
+
+generate_annotations(annotate_files='gencode.v44.annotation.gff3',
+assemble_transcriptome='1fpkm.annotated.gtf')
 
 
 }

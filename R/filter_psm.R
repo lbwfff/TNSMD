@@ -1,11 +1,11 @@
 #' filter Peptide
 #'
 #' @param combined_peptide Combined_peptide file from fragpipe
-#' @param combined_modified_peptide combined_modified_peptide file from fragpipe
+#' @param combined_modified_peptide combined_modified_peptide file from fragpipe, lbf data no need
 #' @param fastafile Fasta files for known proteins
-#' @param peptide_quant fragpipe outputs a quantitative file of peptide
+#' @param peptide_quant fragpipe outputs a quantitative file of peptide, for label-free data please use the msstats.csv file
 #' @param datatype tmt or lbf
-#' @param label Tags are used to filter known proteins, for uniprot proteins use 'sp'
+#' @param label Tags are used to filter known proteins, for Swiss-Prot proteins can use 'sp', It is also possible to use species names e.g. 'HUMAN', 'MOUSE', as long as it is possible to distinguish between classical and non-classical proteins.
 #'
 #' @return Quantification of peptide intensity after filtration
 #' @export
@@ -64,13 +64,15 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
 
   else{
 
-    nonadd<-utils::read.table(combined_peptide,sep = '\t',header = T)
-    nonadd<-nonadd[-grep('HUMAN',nonadd$Protein),]
-    nonadd<-nonadd[-grep('sp',nonadd$Protein),]
+    nonadd<-data.table::fread(combined_peptide)
+    nonadd<-nonadd[-grep(label,nonadd$Protein),]
 
-    list1<-nonadd$Peptide.Sequence[-grep('HUMAN',nonadd$Mapped.Proteins)]
+    list1<-nonadd$Peptide[grep(label,nonadd$`Mapped Proteins`)]
 
-    peplist<-nonadd$Peptide.Sequence
+    nonadd<-nonadd[-grep(label,nonadd$`Mapped Proteins`),]
+
+
+    peplist<-nonadd$Peptide
     peplist<-unique(peplist)
 
     peplist<-data.frame(seq=c(peplist),
@@ -89,7 +91,7 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
 
     list2<-peplist$seq[peplist$match>0]
 
-    quant<-utils::read.table(peptide_quant,sep = ',',header = T)
+    quant<-data.table::fread(peptide_quant)
 
     filter<-unique(c(list1,list2))
 
@@ -99,8 +101,54 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
   }
 }
 
+#' Filter diann output results
+#'
+#' @param peptide peptide file from fragpipe
+#' @param fastafile Fasta files for known proteins
+#' @param report diann output
+#' @param label Tags are used to filter known proteins, for Swiss-Prot proteins can use 'sp', It is also possible to use species names e.g. 'HUMAN', 'MOUSE', as long as it is possible to distinguish between classical and non-classical proteins.
+#'
+#' @return A filtered diann quantitative result, which can be used for subsequent analysis using the diann package.
+#' @export
+#'
+#' @examples
+#'
+#'
+filter_dia_psm<- function(peptide,fastafile,report,label) {
+  nonadd<-data.table::fread(peptide)
+  nonadd<-nonadd[-grep(label,nonadd$Protein),]
 
+  list1<-nonadd$Peptide[grep(label,nonadd$`Mapped Proteins`)]
 
+  nonadd<-nonadd[-grep(label,nonadd$`Mapped Proteins`),]
+
+  peplist<-nonadd$Peptide
+  peplist<-unique(peplist)
+
+  peplist<-data.frame(seq=c(peplist),
+                      match=c(NA))
+
+  pattern2 <- Biostrings::readAAStringSet(fastafile)
+
+  for (i in 1:nrow(peplist)){
+
+    pattern1 <- Biostrings::AAString(peplist$seq[i])
+
+    match<-Biostrings::vcountPattern(pattern1, pattern2, max.mismatch=1)
+
+    peplist$match[i]<-sum(match)
+  }
+
+  list2<-peplist$seq[peplist$match>0]
+
+  quant<-data.table::fread(report)
+
+  filter<-unique(c(list1,list2))
+
+  quant<-quant[!(quant$Stripped.Sequence %in% filter),]
+
+  return(quant)
+}
 
 #' Conversion of screened peptide quantification files to MSstatsTMT objects for estimating protein intensities. This function only works with tmt data.
 #'
@@ -173,5 +221,85 @@ build_msstats <- function (quant,annotation) {
   return(list)
 
 }
+
+
+#' Conversion of screened peptide quantification files to MSstats objects for estimating protein intensities. This function only works with label-free data.
+#'
+#' @param quant Filtered peptide intensity, filter_psm output result
+#' @param ...
+#'
+#' @return A list contains two objects, list[[1]] is an MSstats object that can be used for quality control and subsequent analyses, list[[2]] is the estimated protein intensity obtained using the MSstats algorithm
+#' @export
+#'
+#' @seealso \code{\link{MSstats::dataProcess}}
+#'
+#' @examples
+build_msstats_lbf <- function(quant,...) {
+
+  quant$BioReplicate[is.na(quant$BioReplicate)]<-1
+
+  print('Converting quantitative results to MSstatsTMT objects can take a long time depending on the number of peptides and sample size')
+
+  processedData <- MSstats::dataProcess(quant, ...) #特别慢这个function
+
+  protein<-processedData[["ProteinLevelData"]]
+
+  exparray <- tidyr::spread(protein[,c(2,3,5)], key = GROUP, value = LogIntensities)
+
+  list<-list()
+  list[[1]]<-processedData
+  list[[2]]<-exparray
+
+  return(list)
+}
+
+#' Use this function to merge data from different fractions
+#'
+#' @param quant filter_dia_psm output
+#' @param meta fp-manifest file
+#' @param ...
+#'
+#' @return Merged protein expression matrix
+#' @export
+#'
+#' @seealso \code{\link{diann::diann_maxlfq}}
+#'
+#' @examples
+dia_quant <- function (quant,meta,...) {
+
+  protein.groups <- diann::diann_maxlfq(quant[quant$Q.Value <= 0.01 &
+                                                quant$PG.Q.Value <= 0.01,],...)
+
+  meta<-read.table(meta)
+  meta<-meta[meta$V3=='DIA',]
+
+  exp<-as.data.frame(array(NA,c(nrow(protein.groups),length(unique(meta$V2)))))
+
+  colnames(exp)<-unique(meta$V2)
+  rownames(exp)<-rownames(protein.groups)
+
+  for (i in 1:ncol(exp)){
+    file<-meta$V1[meta$V2==colnames(exp)[i]]
+
+    signs<-protein.groups[,colnames(protein.groups) %in% file]
+    signs[is.na(signs)]<-0
+
+    if(length(file)>1) {
+
+      exp[,i]<-rowSums(signs)
+
+    } else{
+
+      exp[,i]<-signs
+
+    }
+  }
+
+return(exp)
+
+}
+
+
+
 
 

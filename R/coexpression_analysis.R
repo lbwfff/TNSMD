@@ -21,17 +21,14 @@ coexp_gsea<-function(array,name,species) {
   Org = org.Mm.eg.db
   }
 
-  pro<-read.table('../test_package/abundance_protein_MD.tsv',sep = '\t',header = T)
+  pro<-array
 
+  cor<-pro[grep(name,rownames(pro)),]
 
-  cor<-pro[grep('sPep_30306',pro$Index),]
+  exp<-as.data.frame(pro)
+  cor<-as.data.frame(cor)
 
-  rownames(pro)<-pro$Index
-  rownames(cor)<-cor$Index
-  exp<-as.data.frame(pro[,-(1:5)])
-  cor<-as.data.frame(cor[,-(1:5)])
-
-  exp<-exp[-grep('rev',rownames(exp)),]
+  exp<-exp[grep('rev',rownames(exp),invert=T),]
 
   corresult<-cor(t(exp),t(cor),use = "p")
   corresult<-as.data.frame(corresult)

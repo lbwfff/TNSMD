@@ -112,6 +112,13 @@ plot_peptide_fdr<-function(target,decoy,label,peptidelist){
   plot$score<-as.numeric(plot$score)
   plot$pep<-as.numeric(plot$pep)
 
+  remove_first_last_two <- function(string) {
+    result <- substr(string, 3, nchar(string) - 2)
+    return(result)
+  }
+
+  plot$seq <- sapply( plot$seq, remove_first_last_two)
+
   plot$seq <- gsub("[^A-Z]", "", plot$seq)
 
   library(ggrepel)
@@ -138,7 +145,8 @@ plot_peptide_fdr<-function(target,decoy,label,peptidelist){
     geom_point(shape=21,size=4)+
     scale_colour_manual(values = c("target" = "#009900", "decoy" = "#FF9900")) +
     geom_text_repel(data = plot[plot$seq %in% peptidelist,],aes(label = seq),color = "black",
-                    size = 3,segment.color = "black", show.legend = FALSE,hjust = -1.5 )+
+                    size = 3,segment.color = "black", show.legend = FALSE,vjust = -3 ,
+                    force=20,point.padding = 0.5,arrow = arrow(length = unit(0.01, "npc"), type = "open", ends = "last"))+
     theme_bw() +
     theme(plot.title = element_text(size = rel(1.5)),
           axis.title = element_text(size = rel(1.2)),
@@ -147,7 +155,8 @@ plot_peptide_fdr<-function(target,decoy,label,peptidelist){
     theme(aspect.ratio=1)+
     labs(x = 'score', y = "")+
     theme(axis.text.y = element_blank(),
-          axis.ticks.y = element_blank())
+          axis.ticks.y = element_blank())+
+    geom_vline(xintercept=c(max(decoy_clas$score)),lty=3,col="black",lwd=0.5)
 
   return(p)
 }
