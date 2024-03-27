@@ -2,25 +2,27 @@
 % Please edit documentation in R/generate_annotations.R
 \name{generate_annotations}
 \alias{generate_annotations}
-\title{Generate annotation files for Ribo-seq analysis}
+\title{Generate gtf files for Ribo-seq analysis}
 \usage{
 generate_annotations(annotate_files, assemble_transcriptome)
 }
 \arguments{
 \item{annotate_files}{Annotation file, such as gencode.v44.annotation.gff3}
 
-\item{assemble_transcriptome}{GffCompare results}
+\item{assemble_transcriptome}{GffCompare or gffcompare results}
 }
 \value{
-Adjusted assembled transcriptome that can be merged with annotation files for Ribo-seq analysis
+Adjusted assembled transcriptome gtf files so that they can be merged with gtf files for Ribo-seq analysis
 }
 \description{
-Generate annotation files for Ribo-seq analysis
+Generate gtf files for Ribo-seq analysis
 }
 \examples{
 
-generate_annotations(annotate_files='gencode.v44.annotation.gff3',
-assemble_transcriptome='1fpkm.annotated.gtf')
+test<-generate_annotations(annotate_files='gencode.v44.annotation.gff3',
+                            assemble_transcriptome='1fpkm.annotated.gtf')
+
+write.table(test[,-10],file = 'test.gtf',sep = '\t',quote = F,col.names = F,row.names = F)
 
 
 }

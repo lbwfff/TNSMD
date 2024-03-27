@@ -19,3 +19,13 @@ A list consists of three ggplot images.
 \description{
 Visualisation of subgroup FDR control
 }
+\examples{
+
+plot<-plot_fdr('/scratch/lb4489/project/van_cell/cety_regi/fragpipe/210323_MvO_2009_BR3_Camk2a-BULB-MIX-3_percolator_target_psms.tsv',
+                '/scratch/lb4489/project/van_cell/cety_regi/fragpipe/210323_MvO_2009_BR3_Camk2a-BULB-MIX-3_percolator_decoy_psms.tsv',
+                 'sp')
+
+patchwork::wrap_plots(plot,nrow=1, guides="collect")
+
+
+}

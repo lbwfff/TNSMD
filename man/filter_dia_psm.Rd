@@ -21,3 +21,11 @@ A filtered diann quantitative result, which can be used for subsequent analysis 
 \description{
 Filter diann output results
 }
+\examples{
+
+test3<-filter_dia_psm('/scratch/lb4489/project/van_cell/cety_regi/fragpipe/peptide.tsv',
+                     '/scratch/lb4489/bioindex/uniprot_mouse.fasta',
+                     '/scratch/lb4489/project/van_cell/cety_regi/fragpipe/diann-output/report.tsv',
+                     'sp')
+
+}

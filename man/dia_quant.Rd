@@ -4,14 +4,14 @@
 \alias{dia_quant}
 \title{Use this function to merge data from different fractions}
 \usage{
-dia_quant(quant, meta, ...)
+dia_quant(quant, meta, merge)
 }
 \arguments{
 \item{quant}{filter_dia_psm output}
 
 \item{meta}{fp-manifest file}
 
-\item{...}{}
+\item{merge}{T or F, set T to merge different fractions, if merged a meta file is required.}
 }
 \value{
 Merged protein expression matrix
@@ -19,6 +19,8 @@ Merged protein expression matrix
 \description{
 Use this function to merge data from different fractions
 }
-\seealso{
-\code{\link{diann::diann_maxlfq}}
+\examples{
+
+dia<-dia_quant(test3,'/scratch/lb4489/project/van_cell/cety_regi/file.fp-manifest',merge=F)
+
 }

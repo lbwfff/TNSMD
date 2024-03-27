@@ -9,6 +9,14 @@
 #' @export
 #'
 #' @examples
+#'
+#' plot<-plot_fdr('/scratch/lb4489/project/van_cell/cety_regi/fragpipe/210323_MvO_2009_BR3_Camk2a-BULB-MIX-3_percolator_target_psms.tsv',
+#'                 '/scratch/lb4489/project/van_cell/cety_regi/fragpipe/210323_MvO_2009_BR3_Camk2a-BULB-MIX-3_percolator_decoy_psms.tsv',
+#'                  'sp')
+#'
+#' patchwork::wrap_plots(plot,nrow=1, guides="collect")
+#'
+#'
 plot_fdr <- function(target,decoy,label) {
 
   target<-read.table(target,header = T)
@@ -18,6 +26,7 @@ plot_fdr <- function(target,decoy,label) {
     score=c(target$score,decoy$score),
     group=c(rep('target',nrow(target)),rep('decoy',nrow(decoy)))
   )
+  plot$group<-fatcor(plot$group,levels=c('target','decoy'))
 
   library(ggplot2)
 
@@ -45,6 +54,7 @@ plot_fdr <- function(target,decoy,label) {
     score=c(target_clas$score,decoy_clas$score),
     group=c(rep('target',nrow(target_clas)),rep('decoy',nrow(decoy_clas)))
   )
+  plot$group<-fatcor(plot$group,levels=c('target','decoy'))
 
   p[[2]]<-
     ggplot(plot, aes(score, fill = group, col = I("black"))) +
@@ -67,6 +77,7 @@ plot_fdr <- function(target,decoy,label) {
     score=c(target_clas$score,decoy_clas$score),
     group=c(rep('target',nrow(target_clas)),rep('decoy',nrow(decoy_clas)))
   )
+  plot$group<-fatcor(plot$group,levels=c('target','decoy'))
 
   p[[3]]<-
     ggplot(plot, aes(score, fill = group, col = I("black"))) +
@@ -95,6 +106,14 @@ return(p)
 #' @export
 #'
 #' @examples
+#' plot<-plot_peptide_fdr('/scratch/lb4489/project/van_cell/cety_regi/fragpipe/210323_MvO_2009_BR3_Camk2a-BULB-MIX-3_percolator_target_psms.tsv',
+#'                        '/scratch/lb4489/project/van_cell/cety_regi/fragpipe/210323_MvO_2009_BR3_Camk2a-BULB-MIX-3_percolator_decoy_psms.tsv',
+#'                        'sp',c('ASGGGVPTDEEQATGLER','IEREPEDNDYLWR'))
+#'
+#' patchwork::wrap_plots(plot,nrow=2, guides="collect")
+#'
+#'
+#'
 plot_peptide_fdr<-function(target,decoy,label,peptidelist){
 
   target<-read.table(target,header = T)
@@ -109,6 +128,7 @@ plot_peptide_fdr<-function(target,decoy,label,peptidelist){
     group=c(rep('target',nrow(target_clas)),rep('decoy',nrow(decoy_clas))),
     seq=c(target_clas$peptide,decoy_clas$peptide)
   )
+  plot$group<-fatcor(plot$group,levels=c('target','decoy'))
   plot$score<-as.numeric(plot$score)
   plot$pep<-as.numeric(plot$pep)
 

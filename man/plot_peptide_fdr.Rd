@@ -21,3 +21,13 @@ A list consists of two ggplot images.
 \description{
 Visualising the distribution of scores for specific peptides
 }
+\examples{
+plot<-plot_peptide_fdr('/scratch/lb4489/project/van_cell/cety_regi/fragpipe/210323_MvO_2009_BR3_Camk2a-BULB-MIX-3_percolator_target_psms.tsv',
+                       '/scratch/lb4489/project/van_cell/cety_regi/fragpipe/210323_MvO_2009_BR3_Camk2a-BULB-MIX-3_percolator_decoy_psms.tsv',
+                       'sp',c('ASGGGVPTDEEQATGLER','IEREPEDNDYLWR'))
+
+patchwork::wrap_plots(plot,nrow=2, guides="collect")
+
+
+
+}

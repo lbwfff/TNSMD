@@ -14,6 +14,7 @@ Imports:
     Biostrings,
     clusterProfiler,
     data.table,
+    diann,
     ggplot2,
     ggrepel,
     GseaVis,

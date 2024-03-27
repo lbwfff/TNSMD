@@ -31,11 +31,27 @@ Construction of a proteogenomics index based on ribo-seq results
 
 library('TNSMD')
 
-test<-generate_index('ribo/homo_brain_ribocode.txt','ribocode',100,'sPep')
+#ribocode
+ribocode<-generate_index('/scratch/lb4489/project/liver_ribo/Ribo/ribocode_liver_ribo.txt','ribocode',100,'sPep')
 
-characters<-test$sequence
+#ribitish
+ribotish<-generate_index('/scratch/lb4489/project/liver_ribo/Ribo/ribotish_full_all.txt','ribotish',100,'sPep')
+
+#database
+other<-read.table('/scratch/lb4489/project/toolbox/SmProt2_human_Ribo.txt',sep = '\t',header = T)
+other<-data.frame(genename=c('SPROHSA'),
+                 orftype=c('Orf'),
+                 pepseq=c(other$AAseq))
+write.csv(other,'/scratch/lb4489/project/toolbox/smprot2.csv')
+
+other<-generate_index('/scratch/lb4489/project/toolbox/smprot2.csv','other',100,'sPep')
+
+#write
+
+characters<-other$sequence #peptide sequence
 list<-as.list(characters)
-seqinr::write.fasta(sequences=list, names=test$name, file.out='sPep.fasta', open='w', nbchar=60)
+seqinr::write.fasta(sequences=list, names=other$name,
+                   file.out='test.fasta', open='w', nbchar=60)
 
 
 }

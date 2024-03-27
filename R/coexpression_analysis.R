@@ -2,24 +2,21 @@
 #'
 #' @param array Protein intensity array
 #' @param name Name of peptide analysed
-#' @param species Only 'human' or 'mouse' is supported.
+#' @param OrgDb OrgDB for enrichment analysis, org.Hs.eg.db for human, org.Mm.eg.db for mouse, see more at https://www.bioconductor.org/packages/devel/BiocViews.html#___OrgDb
 #'
 #' @return A list consists of [1] a clusterProfiler object, [2] a GSEA diagram
 #' @export
 #'
 #' @examples
-coexp_gsea<-function(array,name,species) {
+#'
+#' coexp_gsea(exp,'sPep1345',org.Hs.eg.db)
+#'
+coexp_gsea<-function(array,name,OrgDb) {
 
   library(clusterProfiler)
   library(ggplot2)
 
-  if (species=='human'){organism='hsa'
-  library(org.Hs.eg.db)
-  Org = org.Hs.eg.db
-  } else {organism='mmu'
-  library(org.Mm.eg.db)
-  Org = org.Mm.eg.db
-  }
+  Org = OrgDb
 
   pro<-array
 

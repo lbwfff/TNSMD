@@ -12,6 +12,23 @@
 #'
 #' @examples
 #'
+#' #TMT data
+#'
+#'test<-filter_psm('/scratch/lb4489/project/MS_data/test_fdr/tmt_313/combined_peptide.tsv',
+#'                 '/scratch/lb4489/project/MS_data/test_fdr/tmt_313/combined_modified_peptide.tsv',
+#'                 '/scratch/lb4489/bioindex/uniprot_human.fasta',
+#'                 '/scratch/lb4489/project/MS_data/test_fdr/tmt_313/tmt-report/abundance_peptide_MD.tsv',
+#'                 'tmt',
+#'                 'sp')
+#'
+#' #label-free data
+#'
+#'test2<-filter_psm('/scratch/lb4489/project/MS_data/test_fdr/lbf_3_14/combined_peptide.tsv',
+#'                  '/scratch/lb4489/project/MS_data/test_fdr/lbf_3_14/combined_modified_peptide.tsv',
+#'                  '/scratch/lb4489/bioindex/uniprot_human.fasta',
+#'                  '/scratch/lb4489/project/MS_data/test_fdr/lbf_3_14/MSstats.csv',
+#'                  'lbf',
+#'                  'sp')
 #'
 #'
 filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
@@ -42,6 +59,8 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
 
   pattern2 <- Biostrings::readAAStringSet(fastafile)
 
+  print('Filter all possible single amino acid polymorphism products')
+
   for (i in 1:nrow(peplist)){
 
     pattern1 <- Biostrings::AAString(peplist$seq[i])
@@ -64,13 +83,18 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
 
   else{
 
-    nonadd<-data.table::fread(combined_peptide)
+    pep<-data.table::fread(combined_peptide)
+    modpep<-data.table::fread(combined_modified_peptide)
+
+    nonadd<-data.frame(Peptide.Sequence=c(pep$`Peptide Sequence`,modpep$`Peptide Sequence`),
+                       Protein=c(pep$Protein,modpep$Protein),
+                       Mapped.Proteins=c(pep$`Mapped Proteins`,modpep$`Mapped Proteins`))
+
     nonadd<-nonadd[-grep(label,nonadd$Protein),]
 
-    list1<-nonadd$Peptide[grep(label,nonadd$`Mapped Proteins`)]
+    list1<-nonadd$Peptide[grep(label,nonadd$Mapped.Proteins)]
 
-    nonadd<-nonadd[-grep(label,nonadd$`Mapped Proteins`),]
-
+    nonadd<-nonadd[-grep(label,nonadd$Mapped.Proteins),]
 
     peplist<-nonadd$Peptide
     peplist<-unique(peplist)
@@ -79,6 +103,8 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
                         match=c(NA))
 
     pattern2 <- Biostrings::readAAStringSet(fastafile)
+
+    print('Filter all possible single amino acid polymorphism products')
 
     for (i in 1:nrow(peplist)){
 
@@ -113,6 +139,10 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
 #'
 #' @examples
 #'
+#' test3<-filter_dia_psm('/scratch/lb4489/project/van_cell/cety_regi/fragpipe/peptide.tsv',
+#'                      '/scratch/lb4489/bioindex/uniprot_mouse.fasta',
+#'                      '/scratch/lb4489/project/van_cell/cety_regi/fragpipe/diann-output/report.tsv',
+#'                      'sp')
 #'
 filter_dia_psm<- function(peptide,fastafile,report,label) {
   nonadd<-data.table::fread(peptide)
@@ -129,6 +159,8 @@ filter_dia_psm<- function(peptide,fastafile,report,label) {
                       match=c(NA))
 
   pattern2 <- Biostrings::readAAStringSet(fastafile)
+
+  print('Filter all possible single amino acid polymorphism products')
 
   for (i in 1:nrow(peplist)){
 
@@ -234,21 +266,23 @@ build_msstats <- function (quant,annotation) {
 #' @seealso \code{\link{MSstats::dataProcess}}
 #'
 #' @examples
+#'
+#' lbf<-build_msstats_lbf(test2)
+#'
 build_msstats_lbf <- function(quant,...) {
 
+  quant<-as.data.frame(quant)
   quant$BioReplicate[is.na(quant$BioReplicate)]<-1
 
   print('Converting quantitative results to MSstatsTMT objects can take a long time depending on the number of peptides and sample size')
 
   processedData <- MSstats::dataProcess(quant, ...) #特别慢这个function
 
-  protein<-processedData[["ProteinLevelData"]]
-
-  exparray <- tidyr::spread(protein[,c(2,3,5)], key = GROUP, value = LogIntensities)
+  protein<-MSstats::quantification(processedData)
 
   list<-list()
   list[[1]]<-processedData
-  list[[2]]<-exparray
+  list[[2]]<-protein
 
   return(list)
 }
@@ -257,18 +291,25 @@ build_msstats_lbf <- function(quant,...) {
 #'
 #' @param quant filter_dia_psm output
 #' @param meta fp-manifest file
-#' @param ...
+#' @param merge T or F, set T to merge different fractions, if merged a meta file is required.
 #'
 #' @return Merged protein expression matrix
 #' @export
 #'
-#' @seealso \code{\link{diann::diann_maxlfq}}
 #'
 #' @examples
-dia_quant <- function (quant,meta,...) {
+#'
+#' dia<-dia_quant(test3,'/scratch/lb4489/project/van_cell/cety_regi/file.fp-manifest',merge=F)
+#'
+dia_quant <- function (quant,meta,merge) {
 
-  protein.groups <- diann::diann_maxlfq(quant[quant$Q.Value <= 0.01 &
-                                                quant$PG.Q.Value <= 0.01,],...)
+  protein.groups <- diann::diann_maxlfq(quant[quant$Q.Value <= 0.01 &quant$PG.Q.Value <= 0.01,],
+                                        group.header="Protein.Group", id.header = "Precursor.Id",
+                                        quantity.header = "Precursor.Normalised")
+
+  if (!merge) {
+    return(protein.groups)
+  } else{
 
   meta<-read.table(meta)
   meta<-meta[meta$V3=='DIA',]
@@ -295,7 +336,7 @@ dia_quant <- function (quant,meta,...) {
     }
   }
 
-return(exp)
+  return(exp) }
 
 }
 

@@ -1,15 +1,17 @@
-#' Generate annotation files for Ribo-seq analysis
+#' Generate gtf files for Ribo-seq analysis
 #'
 #' @param annotate_files Annotation file, such as gencode.v44.annotation.gff3
-#' @param assemble_transcriptome GffCompare results
+#' @param assemble_transcriptome GffCompare or gffcompare results
 #'
-#' @return Adjusted assembled transcriptome that can be merged with annotation files for Ribo-seq analysis
+#' @return Adjusted assembled transcriptome gtf files so that they can be merged with gtf files for Ribo-seq analysis
 #' @export
 #'
 #' @examples
 #'
-#' generate_annotations(annotate_files='gencode.v44.annotation.gff3',
-#' assemble_transcriptome='1fpkm.annotated.gtf')
+#' test<-generate_annotations(annotate_files='gencode.v44.annotation.gff3',
+#'                             assemble_transcriptome='1fpkm.annotated.gtf')
+#'
+#' write.table(test[,-10],file = 'test.gtf',sep = '\t',quote = F,col.names = F,row.names = F)
 #'
 #'
 generate_annotations <- function(annotate_files, assemble_transcriptome){
@@ -118,6 +120,7 @@ f <-function(x) unlist(strsplit(x['V9'],';'))[1]
 cache$gene <-apply(cache,1,f)
 
 cache2<-cache[1,]
+
 
 for (i in unique(cache$gene)){
   inf<-cache[cache$gene==i,]

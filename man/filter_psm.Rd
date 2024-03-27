@@ -32,3 +32,25 @@ Quantification of peptide intensity after filtration
 \description{
 filter Peptide
 }
+\examples{
+
+#TMT data
+
+test<-filter_psm('/scratch/lb4489/project/MS_data/test_fdr/tmt_313/combined_peptide.tsv',
+                '/scratch/lb4489/project/MS_data/test_fdr/tmt_313/combined_modified_peptide.tsv',
+                '/scratch/lb4489/bioindex/uniprot_human.fasta',
+                '/scratch/lb4489/project/MS_data/test_fdr/tmt_313/tmt-report/abundance_peptide_MD.tsv',
+                'tmt',
+                'sp')
+
+#label-free data
+
+test2<-filter_psm('/scratch/lb4489/project/MS_data/test_fdr/lbf_3_14/combined_peptide.tsv',
+                 '/scratch/lb4489/project/MS_data/test_fdr/lbf_3_14/combined_modified_peptide.tsv',
+                 '/scratch/lb4489/bioindex/uniprot_human.fasta',
+                 '/scratch/lb4489/project/MS_data/test_fdr/lbf_3_14/MSstats.csv',
+                 'lbf',
+                 'sp')
+
+
+}

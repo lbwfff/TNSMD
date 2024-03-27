@@ -4,18 +4,23 @@
 \alias{coexp_gsea}
 \title{Co-expression analysis using the GSEA algorithm}
 \usage{
-coexp_gsea(array, name, species)
+coexp_gsea(array, name, OrgDb)
 }
 \arguments{
 \item{array}{Protein intensity array}
 
 \item{name}{Name of peptide analysed}
 
-\item{species}{Only 'human' or 'mouse' is supported.}
+\item{OrgDb}{OrgDB for enrichment analysis, org.Hs.eg.db for human, org.Mm.eg.db for mouse, see more at https://www.bioconductor.org/packages/devel/BiocViews.html#___OrgDb}
 }
 \value{
 A list consists of [1] a clusterProfiler object, [2] a GSEA diagram
 }
 \description{
 Co-expression analysis using the GSEA algorithm
+}
+\examples{
+
+coexp_gsea(exp,'sPep1345',org.Hs.eg.db)
+
 }

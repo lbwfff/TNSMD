@@ -17,6 +17,11 @@ A list contains two objects, list[[1]] is an MSstats object that can be used for
 \description{
 Conversion of screened peptide quantification files to MSstats objects for estimating protein intensities. This function only works with label-free data.
 }
+\examples{
+
+lbf<-build_msstats_lbf(test2)
+
+}
 \seealso{
 \code{\link{MSstats::dataProcess}}
 }
