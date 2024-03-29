@@ -26,7 +26,7 @@ plot_fdr <- function(target,decoy,label) {
     score=c(target$score,decoy$score),
     group=c(rep('target',nrow(target)),rep('decoy',nrow(decoy)))
   )
-  plot$group<-fatcor(plot$group,levels=c('target','decoy'))
+  plot$group<-factor(plot$group,levels=c('target','decoy'))
 
   library(ggplot2)
 
@@ -54,7 +54,7 @@ plot_fdr <- function(target,decoy,label) {
     score=c(target_clas$score,decoy_clas$score),
     group=c(rep('target',nrow(target_clas)),rep('decoy',nrow(decoy_clas)))
   )
-  plot$group<-fatcor(plot$group,levels=c('target','decoy'))
+  plot$group<-factor(plot$group,levels=c('target','decoy'))
 
   p[[2]]<-
     ggplot(plot, aes(score, fill = group, col = I("black"))) +
@@ -77,7 +77,7 @@ plot_fdr <- function(target,decoy,label) {
     score=c(target_clas$score,decoy_clas$score),
     group=c(rep('target',nrow(target_clas)),rep('decoy',nrow(decoy_clas)))
   )
-  plot$group<-fatcor(plot$group,levels=c('target','decoy'))
+  plot$group<-factor(plot$group,levels=c('target','decoy'))
 
   p[[3]]<-
     ggplot(plot, aes(score, fill = group, col = I("black"))) +
@@ -128,7 +128,7 @@ plot_peptide_fdr<-function(target,decoy,label,peptidelist){
     group=c(rep('target',nrow(target_clas)),rep('decoy',nrow(decoy_clas))),
     seq=c(target_clas$peptide,decoy_clas$peptide)
   )
-  plot$group<-fatcor(plot$group,levels=c('target','decoy'))
+  plot$group<-factor(plot$group,levels=c('target','decoy'))
   plot$score<-as.numeric(plot$score)
   plot$pep<-as.numeric(plot$pep)
 

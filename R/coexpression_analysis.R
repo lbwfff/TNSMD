@@ -13,8 +13,9 @@
 #'
 coexp_gsea<-function(array,name,OrgDb) {
 
+
   library(clusterProfiler)
-  library(ggplot2)
+  # library(ggplot2) #这里加载了导致报错
 
   Org = OrgDb
 
@@ -45,9 +46,10 @@ coexp_gsea<-function(array,name,OrgDb) {
 
   enrich<-as.numeric(corresult$sel)
   names(enrich) <- as.character(corresult$ID)
+  enrich<-enrich[!is.na(enrich)]
 
 
-  edo2 <- clusterProfiler::gseGO(enrich,OrgDb= Org,ont='ALL',pvalueCutoff = 0.5,eps=0)
+  edo2 <- clusterProfiler::gseGO(enrich,OrgDb= Org,ont='ALL',pvalueCutoff = 0.1,eps=0)
 
   p<-list()
 
