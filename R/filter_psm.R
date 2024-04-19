@@ -47,9 +47,13 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
 
   nonadd<-nonadd[!duplicated(nonadd$Peptide.Sequence),]
 
-  nonadd<-nonadd[-grep(label,nonadd$Protein),]
+  nonadd<-nonadd[grep(label,nonadd$Protein,invert =T),]
 
   list1<-nonadd$Peptide.Sequence[grep(label,nonadd$Mapped.Proteins)]
+
+  nonadd<-nonadd[grep(label,nonadd$Mapped.Proteins,invert =T),]
+
+  if(nrow(nonadd)>1)  {
 
   peplist<-nonadd$Peptide.Sequence
   peplist<-unique(peplist)
@@ -77,7 +81,7 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
   filter<-unique(c(list1,list2))
   quant<-quant[!(quant$Peptide %in% filter),]
 
-  return(quant)
+  return(quant) } else{ print('No products found')}
 
   }
 
@@ -90,11 +94,13 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
                        Protein=c(pep$Protein,modpep$Protein),
                        Mapped.Proteins=c(pep$`Mapped Proteins`,modpep$`Mapped Proteins`))
 
-    nonadd<-nonadd[-grep(label,nonadd$Protein),]
+    nonadd<-nonadd[grep(label,nonadd$Protein,invert =T),]
 
     list1<-nonadd$Peptide[grep(label,nonadd$Mapped.Proteins)]
 
-    nonadd<-nonadd[-grep(label,nonadd$Mapped.Proteins),]
+    nonadd<-nonadd[grep(label,nonadd$Mapped.Proteins,invert =T),]
+
+    if(nrow(nonadd)>1) {
 
     peplist<-nonadd$Peptide
     peplist<-unique(peplist)
@@ -123,7 +129,9 @@ filter_psm <- function(combined_peptide,combined_modified_peptide,fastafile,
 
     quant<-quant[!(gsub("[^A-Z]", "", quant$PeptideSequence) %in% filter),]
 
-    return(quant)
+    return(quant) } else{
+      print('No products found')
+    }
   }
 }
 

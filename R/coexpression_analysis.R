@@ -13,10 +13,6 @@
 #'
 coexp_gsea<-function(array,name,OrgDb) {
 
-
-  library(clusterProfiler)
-  # library(ggplot2) #这里加载了导致报错
-
   Org = OrgDb
 
   pro<-array

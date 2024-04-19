@@ -28,12 +28,10 @@ plot_fdr <- function(target,decoy,label) {
   )
   plot$group<-factor(plot$group,levels=c('target','decoy'))
 
-  library(ggplot2)
-
   p<-list()
 
   p[[1]]<-
-    ggplot(plot, aes(score, fill = group, col = I("black"))) +
+    ggplot2::ggplot(plot, aes(score, fill = group, col = I("black"))) +
     geom_histogram(alpha = 0.5, bins = 40, position = "identity") +
     labs(x = 'score', y = "",
          title = "Global") +
@@ -57,7 +55,7 @@ plot_fdr <- function(target,decoy,label) {
   plot$group<-factor(plot$group,levels=c('target','decoy'))
 
   p[[2]]<-
-    ggplot(plot, aes(score, fill = group, col = I("black"))) +
+    ggplot2::ggplot(plot, aes(score, fill = group, col = I("black"))) +
     geom_histogram(alpha = 0.5, bins = 40, position = "identity") +
     labs(x = 'score', y = "",
          title = "Canonical protein") +
@@ -80,7 +78,7 @@ plot_fdr <- function(target,decoy,label) {
   plot$group<-factor(plot$group,levels=c('target','decoy'))
 
   p[[3]]<-
-    ggplot(plot, aes(score, fill = group, col = I("black"))) +
+    ggplot2::ggplot(plot, aes(score, fill = group, col = I("black"))) +
     geom_histogram(alpha = 0.5, bins = 40, position = "identity") +
     labs(x = 'score', y = "",
          title = "sORF encoded peptide") +
@@ -141,12 +139,10 @@ plot_peptide_fdr<-function(target,decoy,label,peptidelist){
 
   plot$seq <- gsub("[^A-Z]", "", plot$seq)
 
-  library(ggrepel)
-
   p<-list()
 
   p[[1]]<-
-    ggplot(plot, aes(score, fill = group, col = I("black"))) +
+    ggplot2::ggplot(plot, aes(score, fill = group, col = I("black"))) +
     geom_histogram(alpha = 0.5, bins = 40, position = "identity") +
     labs(x = 'score', y = "",
          title = "sORF encoded peptide") +
@@ -161,10 +157,10 @@ plot_peptide_fdr<-function(target,decoy,label,peptidelist){
 
 
   p[[2]]<-
-    ggplot(data = plot,aes(x=score,y=pep, colour=group))+
+    ggplot2::ggplot(data = plot,aes(x=score,y=pep, colour=group))+
     geom_point(shape=21,size=4)+
     scale_colour_manual(values = c("target" = "#009900", "decoy" = "#FF9900")) +
-    geom_text_repel(data = plot[plot$seq %in% peptidelist,],aes(label = seq),color = "black",
+    ggrepel::geom_text_repel(data = plot[plot$seq %in% peptidelist,],aes(label = seq),color = "black",
                     size = 3,segment.color = "black", show.legend = FALSE,vjust = -3 ,
                     force=20,point.padding = 0.5,arrow = arrow(length = unit(0.01, "npc"), type = "open", ends = "last"))+
     theme_bw() +
